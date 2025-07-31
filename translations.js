@@ -15,12 +15,22 @@ const translations = {
         projectsTitle: "Projects",
         devPortfolio: "Developer Portfolio",
         workoutApp: "Workout Planner App",
+        workoutAppDesc: "Personal fitness tracking platform",
         ecommerceSite: "Sleek E-Commerce Website",
+        ecommerceSiteDesc: "Modern online shopping experience",
         devCV: "Developer CV Website",
+        devCVDesc: "Interactive resume & portfolio",
         tetrisGame: "Neon Tetris Game",
+        tetrisGameDesc: "Retro arcade game with neon aesthetics",
         pvzGame: "Plant vs Zombies Clone",
+        pvzGameDesc: "Tower defense strategy game remake",
         barberSite: "Barber Shop Website",
-        saveContact: "Save Contact Info"
+        barberSiteDesc: "Booking system for modern barbershop",
+        saveContact: "Save Contact Info",
+        adnanPortfolio: "Adnan Videographer Portfolio",
+        adnanECard: "Adnan Videographer E-Card",
+        adnanPortfolioDesc: "Professional videography portfolio site",
+        adnanECardDesc: "Interactive digital business card"
     },
     ar: {
         name: "أمين شان",
@@ -37,12 +47,22 @@ const translations = {
         projectsTitle: "المشاريع",
         devPortfolio: "محفظة المطور",
         workoutApp: "تطبيق مخطط التمارين",
+        workoutAppDesc: "منصة تتبع اللياقة الشخصية",
         ecommerceSite: "موقع التجارة الإلكترونية الأنيق",
+        ecommerceSiteDesc: "تجربة تسوق عبر الإنترنت الحديثة",
         devCV: "موقع السيرة الذاتية للمطور",
+        devCVDesc: "السيرة الذاتية التفاعلية والمحفظة",
         tetrisGame: "لعبة تتريس النيون",
+        tetrisGameDesc: "لعبة أركيد ريترو مع جماليات النيون",
         pvzGame: "نسخة من النباتات ضد الزومبي",
+        pvzGameDesc: "إعادة صنع لعبة استراتيجية الدفاع عن البرج",
         barberSite: "موقع صالون الحلاقة",
-        saveContact: "حفظ معلومات الاتصال"
+        barberSiteDesc: "نظام الحجز لصالون حلاقة حديث",
+        saveContact: "حفظ معلومات الاتصال",
+        adnanPortfolio: "محفظة أدنان المصور",
+        adnanECard: "بطاقة أدنان الإلكترونية",
+        adnanPortfolioDesc: "موقع محفظة تصوير احترافي",
+        adnanECardDesc: "بطاقة عمل رقمية تفاعلية"
     },
     nl: {
         name: "Amin Shan",
@@ -59,12 +79,22 @@ const translations = {
         projectsTitle: "Projecten",
         devPortfolio: "Developer Portfolio",
         workoutApp: "Workout Planner App",
+        workoutAppDesc: "Persoonlijk fitness-tracking platform",
         ecommerceSite: "Sleek E-Commerce Website",
+        ecommerceSiteDesc: "Moderne online winkelervaring",
         devCV: "Developer CV Website",
+        devCVDesc: "Interactief cv & portfolio",
         tetrisGame: "Neon Tetris Game",
+        tetrisGameDesc: "Retro arcade spel met neon-esthetiek",
         pvzGame: "Plant vs Zombies Clone",
+        pvzGameDesc: "Tower defense strategy game remake",
         barberSite: "Barber Shop Website",
-        saveContact: "Contact Informatie Opslaan"
+        barberSiteDesc: "Boekingssysteem voor moderne kapsalon",
+        saveContact: "Contact Informatie Opslaan",
+        adnanPortfolio: "Adnan Videograaf Portfolio",
+        adnanECard: "Adnan Videograaf E-Card",
+        adnanPortfolioDesc: "Professionele videografie portfolio site",
+        adnanECardDesc: "Interactieve digitale visitekaartje"
     }
 };
 
