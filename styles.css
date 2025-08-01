@@ -667,24 +667,143 @@ body[lang="ar"] .tagline {
     line-height: 1.4;
 }
 
-/* Reduce motion for users who prefer it */
+/* Enhanced touch-friendly styles */
+@media (hover: none) and (pointer: coarse) {
+    .contact-btn:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .contact-btn:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .contact-btn.project-card:active {
+        transform: scale(0.98);
+    }
+    
+    .vcard-btn:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Better font scaling for extreme sizes */
+@media (max-width: 320px) {
+    .container {
+        padding: 3rem 0.5rem 0.5rem;
+    }
+    
+    .name {
+        font-size: 1.75rem;
+    }
+    
+    .title {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+    
+    .contact-btn {
+        padding: 0.75rem 0.875rem;
+        margin: 0 0.25rem;
+    }
+}
+
+/* Landscape orientation fixes */
+@media (max-height: 600px) and (orientation: landscape) {
+    .container {
+        padding: 2rem 1rem 1rem;
+    }
+    
+    .profile-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .links-section {
+        gap: 0.5rem;
+    }
+}
+
+/* Tablet optimization */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 450px;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .contact-btn {
+        border: 2px solid #ffffff;
+    }
+    
+    .contact-btn:hover {
+        background: #ffffff;
+        color: #000000;
+    }
+}
+
+/* Focus styles for accessibility */
+.contact-btn:focus,
+.vcard-btn:focus,
+.lang-btn:focus {
+    outline: 2px solid #00ff88;
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+    .matrix-canvas {
+        animation: none;
+    }
+    
     .name {
         animation: none;
     }
     
-    .contact-btn:hover {
-        transform: none;
-    }
-    
-    .vcard-btn:hover {
-        transform: none;
+    * {
+        transition-duration: 0.01ms !important;
     }
 }
 
-/* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .matrix-canvas {
-        image-rendering: pixelated;
+/* Safe area support for modern devices */
+@supports (padding: max(0px)) {
+    .language-switcher {
+        top: max(1rem, env(safe-area-inset-top));
+        right: max(1rem, env(safe-area-inset-right));
+    }
+    
+    .container {
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* Print styles */
+@media print {
+    .matrix-canvas,
+    .language-switcher {
+        display: none;
+    }
+    
+    body {
+        background: #000;
+        color: #fff;
+    }
+    
+    .contact-btn {
+        color: #000;
+        background: #fff;
+        border: 1px solid #000;
+    }
+}
+
+/* Ensure proper scaling on ultra-wide screens */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 500px;
+    }
+    
+    .name {
+        font-size: 2.75rem;
     }
 }
