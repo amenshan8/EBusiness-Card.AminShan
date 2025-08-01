@@ -113,6 +113,8 @@ class LanguageManager {
     bindEvents() {
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const lang = e.target.dataset.lang;
                 this.setLanguage(lang);
             });
@@ -127,12 +129,12 @@ class LanguageManager {
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
         
-        // Update active button
+        // Update active button with smooth transition
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
         
-        // Apply translations
+        // Apply translations with fade effect
         this.applyTranslations();
     }
 
