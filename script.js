@@ -1,5 +1,28 @@
 // Remove cinematic effects and add viewfinder functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Add touch-specific event listeners
+    const buttons = document.querySelectorAll('.contact-btn, .vcard-btn');
+    
+    buttons.forEach(button => {
+        // Prevent double-tap zoom on iOS
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('touch-active');
+        }, { passive: false });
+        
+        button.addEventListener('touchend', function() {
+            this.classList.remove('touch-active');
+        });
+    });
+    
+    // Handle orientation changes
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            resizeCanvas();
+            initDrops();
+        }, 100);
+    });
+    
     // Add timecode animation (optional - can be removed since no viewfinder)
     const timecodeElement = document.querySelector('.timecode');
     if (timecodeElement) {
@@ -116,6 +139,49 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
+// Enhanced canvas performance
+function optimizeCanvasForMobile() {
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const isAndroid = /Android/.test(ua);
+    
+    if (isIOS || isAndroid) {
+        // Reduce density for mobile
+        const mobileFontSize = isIOS ? 14 : 12;
+        ctx.font = `${mobileFontSize}px monospace`;
+        
+        // Reduce drops for better performance
+        const columns = Math.floor(canvas.width / mobileFontSize);
+        drops.length = columns;
+    }
+}
+
+// Call optimization
+optimizeCanvasForMobile();
+
+// Add viewport meta for better mobile scaling
+const viewportMeta = document.createElement('meta');
+viewportMeta.name = 'viewport';
+viewportMeta.content = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
+document.head.appendChild(viewportMeta);
+
+// Intersection observer for performance
+if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            } else {
+                entry.target.style.animationPlayState = 'paused';
+            }
+        });
+    });
+    
+    document.querySelectorAll('.contact-btn').forEach(btn => {
+        observer.observe(btn);
+    });
+}
+
 // Optimize for mobile devices
 if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
     // Reduce matrix density on mobile
@@ -191,3 +257,20 @@ generateVCard();
 window.addEventListener('beforeunload', () => {
     URL.revokeObjectURL(document.querySelector('.vcard-btn').href);
 });
+
+// Add CSS for touch feedback
+const touchStyles = document.createElement('style');
+touchStyles.textContent = `
+    .touch-active {
+        transform: scale(0.98) !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .language-switcher {
+            top: env(safe-area-inset-top, 1rem);
+            right: env(safe-area-inset-right, 1rem);
+        }
+    }
+`;
+document.head.appendChild(touchStyles);
