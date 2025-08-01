@@ -1,28 +1,5 @@
 // Remove cinematic effects and add viewfinder functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Add touch-specific event listeners
-    const buttons = document.querySelectorAll('.contact-btn, .vcard-btn');
-    
-    buttons.forEach(button => {
-        // Prevent double-tap zoom on iOS
-        button.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            this.classList.add('touch-active');
-        }, { passive: false });
-        
-        button.addEventListener('touchend', function() {
-            this.classList.remove('touch-active');
-        });
-    });
-    
-    // Handle orientation changes
-    window.addEventListener('orientationchange', function() {
-        setTimeout(() => {
-            resizeCanvas();
-            initDrops();
-        }, 100);
-    });
-    
     // Add timecode animation (optional - can be removed since no viewfinder)
     const timecodeElement = document.querySelector('.timecode');
     if (timecodeElement) {
@@ -54,6 +31,40 @@ document.addEventListener('DOMContentLoaded', function() {
             batteryIcon.className = levels[nextIndex];
         }, 5000);
     }
+    
+    // Enhanced mobile/touch optimization
+    // Detect touch devices
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+    if (isTouch) {
+        // Reduce matrix animation intensity on touch devices
+        const canvas = document.querySelector('.matrix-canvas');
+        if (canvas) {
+            canvas.style.opacity = '0.08';
+        }
+        
+        // Remove hover effects on touch devices
+        document.querySelectorAll('.contact-btn').forEach(btn => {
+            btn.style.transition = 'transform 0.1s ease';
+        });
+    }
+    
+    // Optimize matrix animation for performance
+    let matrixAnimation = null;
+    const fps = window.matchMedia('(max-width: 768px)').matches ? 15 : 30;
+    
+    // Use Intersection Observer for animation pause
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                startMatrixAnimation();
+            } else {
+                stopMatrixAnimation();
+            }
+        });
+    });
+    
+    observer.observe(document.querySelector('.container'));
 });
 
 // Matrix background animation - Optimized for performance
@@ -117,6 +128,60 @@ function drawMatrix(currentTime) {
     animationId = requestAnimationFrame(drawMatrix);
 }
 
+// Enhanced matrix animation with performance monitoring
+let matrixFrame = null;
+let matrixLastTime = 0;
+
+function startMatrixAnimation() {
+    const canvas = document.querySelector('.matrix-canvas');
+    if (!canvas || matrixFrame) return;
+    
+    const ctx = canvas.getContext('2d');
+    const fps = window.matchMedia('(max-width: 768px)').matches ? 15 : 30;
+    const fpsInterval = 1000 / fps;
+    
+    function draw(currentTime) {
+        if (currentTime - matrixLastTime < fpsInterval) {
+            matrixFrame = requestAnimationFrame(draw);
+            return;
+        }
+        
+        matrixLastTime = currentTime;
+        
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#00ff88';
+        ctx.font = `${fontSize}px monospace`;
+
+        const columns = Math.floor(canvas.width / fontSize);
+        
+        for (let i = 0; i < columns; i++) {
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+            
+            ctx.fillText(char, x, y);
+
+            if (y > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+        
+        matrixFrame = requestAnimationFrame(draw);
+    }
+    
+    matrixFrame = requestAnimationFrame(draw);
+}
+
+function stopMatrixAnimation() {
+    if (matrixFrame) {
+        cancelAnimationFrame(matrixFrame);
+        matrixFrame = null;
+    }
+}
+
 // Start animation
 animationId = requestAnimationFrame(drawMatrix);
 
@@ -130,6 +195,15 @@ window.addEventListener('resize', () => {
     }, 250);
 });
 
+// Handle dynamic viewport changes
+window.addEventListener('resize', () => {
+    clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(() => {
+        resizeCanvas();
+        initDrops();
+    }, 250);
+});
+
 // Pause animation when tab is not visible
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
@@ -138,49 +212,6 @@ document.addEventListener('visibilitychange', () => {
         animationId = requestAnimationFrame(drawMatrix);
     }
 });
-
-// Enhanced canvas performance
-function optimizeCanvasForMobile() {
-    const ua = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(ua);
-    const isAndroid = /Android/.test(ua);
-    
-    if (isIOS || isAndroid) {
-        // Reduce density for mobile
-        const mobileFontSize = isIOS ? 14 : 12;
-        ctx.font = `${mobileFontSize}px monospace`;
-        
-        // Reduce drops for better performance
-        const columns = Math.floor(canvas.width / mobileFontSize);
-        drops.length = columns;
-    }
-}
-
-// Call optimization
-optimizeCanvasForMobile();
-
-// Add viewport meta for better mobile scaling
-const viewportMeta = document.createElement('meta');
-viewportMeta.name = 'viewport';
-viewportMeta.content = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
-document.head.appendChild(viewportMeta);
-
-// Intersection observer for performance
-if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
-            } else {
-                entry.target.style.animationPlayState = 'paused';
-            }
-        });
-    });
-    
-    document.querySelectorAll('.contact-btn').forEach(btn => {
-        observer.observe(btn);
-    });
-}
 
 // Optimize for mobile devices
 if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
@@ -258,19 +289,20 @@ window.addEventListener('beforeunload', () => {
     URL.revokeObjectURL(document.querySelector('.vcard-btn').href);
 });
 
-// Add CSS for touch feedback
-const touchStyles = document.createElement('style');
-touchStyles.textContent = `
-    .touch-active {
-        transform: scale(0.98) !important;
-        background: rgba(255, 255, 255, 0.15) !important;
+// Ensure proper scaling on orientation change
+window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+        resizeCanvas();
+        initDrops();
+    }, 100);
+});
+
+// Prevent zoom on double-tap
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function(event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
     }
-    
-    @media (max-width: 768px) {
-        .language-switcher {
-            top: env(safe-area-inset-top, 1rem);
-            right: env(safe-area-inset-right, 1rem);
-        }
-    }
-`;
-document.head.appendChild(touchStyles);
+    lastTouchEnd = now;
+}, false);
