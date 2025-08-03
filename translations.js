@@ -3,7 +3,7 @@ const translations = {
     en: {
         name: "Amin Shan",
         title: "Software Developer | Web Designer | Game Creator | E/Business Card Maker | Logo Designer",
-        tagline: "\"Building experiences. Coding with creativity.\"",
+        tagline: "\"Built by Amigodz. Powered by chaos.\"",
         call: "Call Now",
         whatsapp: "WhatsApp",
         email: "Email",
@@ -35,7 +35,7 @@ const translations = {
     ar: {
         name: "أمين شان",
         title: "مطور برمجيات | مصمم ويب | منشئ ألعاب | صانع بطاقات إلكترونية | مصمم شعارات",
-        tagline: "\"بناء التجارب. البرمجة بإبداع.\"",
+        tagline: "\"من صُنع أميگودز، ومشحون بقوة الفوضى.\"",
         call: "اتصل الآن",
         whatsapp: "واتساب",
         email: "البريد الإلكتروني",
@@ -67,7 +67,7 @@ const translations = {
     nl: {
         name: "Amin Shan",
         title: "Software Ontwikkelaar | Web Ontwerper | Game Maker | E/Business Card Maker | Logo Ontwerper",
-        tagline: "\"Ervaringen bouwen. Coderen met creativiteit.\"",
+        tagline: "\"Gebouwd door Amigodz. Aangedreven door chaos.\"",
         call: "Bel Nu",
         whatsapp: "WhatsApp",
         email: "E-mail",
