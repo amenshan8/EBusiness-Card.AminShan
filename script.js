@@ -266,8 +266,8 @@ TITLE:Software Developer | Web Designer | Game Creator | E/Business Card Maker |
 ORG:Amin Shan Development
 TEL:0618316269
 EMAIL:amenshan8@gmail.com
-URL:https://github.com/amenshan8
-NOTE:Building experiences. Coding with creativity.
+URL:https://amigodz.nl/
+NOTE:Built by Amigodz. Powered by chaos.
 END:VCARD`;
 
     // Create blob for download
